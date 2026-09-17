@@ -1,0 +1,18 @@
+{
+  "name": "ianboutique-rental-app",
+  "version": "1.0.0",
+  "description": "Ian Boutique Kigali & Ian Collection — Suit Rental & Inventory Management System",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.116.0"
+  }
+}

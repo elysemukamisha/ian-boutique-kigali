@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="theme-color" content="#0A0C10"/>
+  <title>Ian Boutique — Admin Portal</title>
+  <link rel="stylesheet" href="/src/styles.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <div class="login-mark" style="background:linear-gradient(135deg,#8B5CF6,#6D28D9);">A</div>
+      <h1 class="login-title">Admin Portal</h1>
+      <p class="login-sub">Ian Boutique Management System</p>
+      <form id="loginForm" class="login-form">
+        <div class="form-group">
+          <label class="form-label">Admin Password</label>
+          <input type="password" class="form-input" id="loginPassword" placeholder="Admin password" required/>
+        </div>
+        <div class="login-error hidden" id="loginError">Incorrect admin password.</div>
+        <button type="submit" class="sheet-cta" style="background:linear-gradient(135deg,#8B5CF6,#6D28D9);">Admin Sign In</button>
+      </form>
+      <a href="/staff.html" class="login-back">← Staff Portal</a>
+      <a href="/" class="login-back" style="margin-top:4px;">← Back to Website</a>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast-alert hidden" id="toastAlert">
+    <div class="toast-beacon"></div>
+    <span class="toast-msg" id="toastMessage"></span>
+    <button class="toast-close" id="toastCloseBtn">✕</button>
+  </div>
+
+  <!-- APP SHELL -->
+  <div class="app-shell hidden" id="appShell">
+
+    <header class="top-header">
+      <div class="header-inner">
+        <div class="header-brand">
+          <div class="header-mark" style="background:linear-gradient(135deg,#8B5CF6,#6D28D9);">A</div>
+          <div>
+            <div class="header-title">ADMIN PORTAL</div>
+            <div class="header-sub">IAN BOUTIQUE</div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <a href="/staff.html" class="icon-btn" title="Staff Portal" style="text-decoration:none;font-size:10px;font-weight:800;color:var(--gold);width:auto;padding:0 10px;border-radius:10px;">STAFF</a>
+          <button class="icon-btn" id="logoutBtn" title="Sign out">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="scroll-main" style="padding-bottom:24px;">
+
+      <!-- KPI SUMMARY -->
+      <section class="kpi-scroll-row">
+        <div class="kpi-track">
+          <div class="kpi-tile kpi-avail">
+            <div class="kpi-tile-num" id="kpiStock">—</div>
+            <div class="kpi-tile-label">Total Stock</div>
+            <div class="kpi-tile-sub">Shared inventory</div>
+          </div>
+          <div class="kpi-tile kpi-rented">
+            <div class="kpi-tile-num" id="kpiActiveRentals">—</div>
+            <div class="kpi-tile-label">Active Rentals</div>
+            <div class="kpi-tile-sub">Awaiting return</div>
+          </div>
+          <div class="kpi-tile kpi-overdue">
+            <div class="kpi-tile-num" id="kpiOverdue">—</div>
+            <div class="kpi-tile-label">Overdue</div>
+            <div class="kpi-tile-sub">Need follow-up</div>
+          </div>
+          <div class="kpi-tile kpi-location">
+            <div class="kpi-tile-num" id="kpiTodayRevenue" style="font-size:20px;color:var(--gold);">—</div>
+            <div class="kpi-tile-label">Today's Revenue</div>
+            <div class="kpi-tile-sub">From rentals</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ADMIN TABS -->
+      <nav class="inline-tabs">
+        <button class="itab active" data-tab="prices"  id="tabPricesBtn">💰 Prices</button>
+        <button class="itab"        data-tab="report"  id="tabReportBtn">📊 Report</button>
+        <button class="itab"        data-tab="inventory" id="tabInventoryBtn">📦 Inventory</button>
+        <button class="itab"        data-tab="rentals" id="tabRentalsBtn">🏷 Rentals</button>
+      </nav>
+
+      <!-- TAB: PRICES -->
+      <section id="pricesView" class="tab-pane admin-section">
+        <div class="admin-card">
+          <div class="admin-card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Rental Price Management
+          </div>
+          <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">Set the rental price (RWF per 3-day rental) for each suit. Prices are visible only to admins.</p>
+          <div id="pricesList">
+            <div class="empty-state"><p>Loading prices…</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: END-OF-DAY REPORT -->
+      <section id="reportView" class="tab-pane hidden admin-section">
+        <div class="admin-card">
+          <div class="admin-card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            End-of-Day Report
+          </div>
+
+          <!-- Date picker -->
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label">Report Date</label>
+            <input type="date" class="form-input" id="reportDateInput" style="max-width:200px;"/>
+          </div>
+
+          <!-- Summary tiles -->
+          <div class="report-summary" id="reportSummary">
+            <div class="rs-tile"><div class="rs-val" id="rptRentals">0</div><div class="rs-key">Rentals</div></div>
+            <div class="rs-tile"><div class="rs-val" id="rptReturns">0</div><div class="rs-key">Returns</div></div>
+            <div class="rs-tile"><div class="rs-val" id="rptRevenue" style="font-size:16px;">0 RWF</div><div class="rs-key">Revenue</div></div>
+          </div>
+
+          <!-- Action buttons -->
+          <div class="report-actions">
+            <button class="report-btn primary" id="downloadPdfBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download PDF
+            </button>
+            <button class="report-btn ghost" id="sharePdfBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              Share Report
+            </button>
+          </div>
+
+          <!-- Report table -->
+          <div style="overflow-x:auto;" id="reportTableWrap">
+            <table class="report-table" id="reportTable">
+              <thead>
+                <tr>
+                  <th>Suit</th>
+                  <th>Size</th>
+                  <th>Customer</th>
+                  <th>Location</th>
+                  <th>Status</th>
+                  <th>Price (RWF)</th>
+                </tr>
+              </thead>
+              <tbody id="reportTableBody">
+                <tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text2);">Select a date to view the report</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: INVENTORY -->
+      <section id="inventoryView" class="tab-pane hidden admin-section">
+        <div class="admin-card">
+          <div class="admin-card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            Shared Inventory Status
+          </div>
+          <div id="inventoryList">
+            <div class="empty-state"><p>Loading inventory…</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: RENTALS (with prices) -->
+      <section id="rentalsView" class="tab-pane hidden admin-section">
+        <div class="admin-card">
+          <div class="admin-card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            All Active Rentals (with prices)
+          </div>
+          <div id="adminRentalsList">
+            <div class="empty-state"><p>Loading rentals…</p></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Print-only report template -->
+  <div class="print-only" id="printReport" style="display:none;padding:32px;color:#000;background:#fff;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+      <div style="width:48px;height:48px;border-radius:12px;background:#8B5CF6;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;font-weight:700;">I</div>
+      <div>
+        <div style="font-size:20px;font-weight:800;letter-spacing:0.06em;">IAN BOUTIQUE KIGALI</div>
+        <div style="font-size:13px;color:#666;">End-of-Day Inventory Report</div>
+      </div>
+    </div>
+    <div id="printDate" style="font-size:14px;color:#444;margin-bottom:20px;"></div>
+    <div id="printSummary" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;"></div>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;" id="printTable">
+      <thead><tr style="background:#f5f5f5;">
+        <th style="padding:10px;text-align:left;border:1px solid #ddd;">Suit</th>
+        <th style="padding:10px;text-align:left;border:1px solid #ddd;">Size</th>
+        <th style="padding:10px;text-align:left;border:1px solid #ddd;">Customer</th>
+        <th style="padding:10px;text-align:left;border:1px solid #ddd;">Location</th>
+        <th style="padding:10px;text-align:left;border:1px solid #ddd;">Status</th>
+        <th style="padding:10px;text-align:left;border:1px solid #ddd;">Price (RWF)</th>
+      </tr></thead>
+      <tbody id="printTableBody"></tbody>
+    </table>
+    <div style="margin-top:32px;font-size:11px;color:#888;text-align:center;">Generated by Ian Boutique Management System · Confidential</div>
+  </div>
+
+  <script type="module" src="/src/admin.js"></script>
+</body>
+</html>
