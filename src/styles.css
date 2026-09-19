@@ -504,13 +504,86 @@ body {
 }
 .print-only { display: none; }
 
-/* ── RESPONSIVE ── */
+/* ── RESPONSIVE & FULL SCREEN DESKTOP (STAFF & ADMIN PORTALS) ── */
 @media (min-width: 768px) {
-  .app-shell { max-width: 500px; margin: 0 auto; border-left: 1px solid var(--sep); border-right: 1px solid var(--sep); }
-  .fab { right: calc(50% - 240px + 20px); }
-  .tab-bar { max-width: 500px; left: 50%; transform: translateX(-50%); border-left: 1px solid var(--sep); border-right: 1px solid var(--sep); }
-  .sheet { max-width: 500px; margin: 0 auto; border-left: 1px solid var(--sep); border-right: 1px solid var(--sep); }
+  .app-shell {
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+    border-left: none;
+    border-right: none;
+  }
+  
+  .header-inner,
+  .seg-control-wrap,
+  .inline-tabs,
+  .search-filter-bar,
+  .section-header,
+  .kpi-scroll-row,
+  .rentals-list,
+  .activity-list,
+  .timeline-list,
+  .admin-section {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .kpi-track {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding: 0 0 8px;
+    overflow: visible;
+  }
+  .kpi-tile { min-width: 0; }
+
+  .suits-list {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    padding: 0 24px 32px;
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+  .suit-card {
+    width: 100%;
+    height: 420px;
+  }
+
+  .fab {
+    right: 40px;
+    bottom: 100px;
+  }
+
+  .tab-bar {
+    max-width: 100%;
+    width: 100%;
+    left: 0;
+    transform: none;
+    border-left: none;
+    border-right: none;
+    justify-content: center;
+    gap: 48px;
+  }
+  .tb-item { max-width: 160px; }
+
+  .sheet {
+    max-width: 620px;
+    margin: 0 auto;
+    border-radius: 28px;
+    border-left: 1px solid var(--sep);
+    border-right: 1px solid var(--sep);
+  }
+
   .login-screen { padding: 40px; }
-  .toast-alert { max-width: 464px; left: 50%; transform: translateX(-50%) translateY(-120px); }
+  .toast-alert { max-width: 600px; left: 50%; transform: translateX(-50%) translateY(-120px); }
   .toast-alert.show { transform: translateX(-50%) translateY(0); }
 }
