@@ -1,4 +1,4 @@
-import { getSuits, subscribeAll, SIZES, PANTS_SIZES } from './db.js';
+import { getSuits, subscribeAll, playPingSound, SIZES, PANTS_SIZES } from './db.js';
 
 // Nav scroll effect
 const nav = document.getElementById('nav');
@@ -58,13 +58,15 @@ function renderSuits() {
       }
     }).join('');
 
-    const absImageUrl = new URL(suit.image_path, window.location.origin).href;
-    const waMsg = `Hello Ian Boutique! I'd like to book this ${itemName}: ${suit.title}.\n\nPicture: ${absImageUrl}\n\nPlease advise on availability.`;
+    // Landing page shows AI-styled image if available; real photo used for WhatsApp
+    const displayImg = suit.landing_image_path || suit.image_path;
+    const realImgUrl = new URL(suit.image_path, window.location.origin).href;
+    const waMsg = `Hello Ian Boutique! I'd like to book this ${itemName}: ${suit.title}.\n\nPicture: ${realImgUrl}\n\nPlease advise on availability.`;
 
     return `
       <div class="suit-showcase-card">
         <div class="ssc-img-wrap">
-          <img class="ssc-img" src="${suit.image_path}" alt="${suit.title}" loading="lazy" onerror="this.src='/suits/2037-white.png'"/>
+          <img class="ssc-img" src="${displayImg}" alt="${suit.title}" loading="lazy" onerror="this.src='${suit.image_path}'"/>
           <div class="ssc-overlay"></div>
           <span class="ssc-badge">${suit.code}</span>
           <span class="ssc-avail">
@@ -79,7 +81,7 @@ function renderSuits() {
             ${suit.color}
           </div>
           <div class="ssc-sizes" id="sizes-${suit.id}">${sizePills}</div>
-          <a href="#" class="ssc-cta book-btn" data-id="${suit.id}" data-image="${absImageUrl}" data-msg="${encodeURIComponent(waMsg)}">
+          <a href="#" class="ssc-cta book-btn" data-id="${suit.id}" data-image="${realImgUrl}" data-msg="${encodeURIComponent(waMsg)}">
             ${btnText}
           </a>
         </div>
@@ -111,6 +113,9 @@ function renderSuits() {
         alert("Please select a size first!");
         return;
       }
+      
+      // Play audio notification ping
+      playPingSound();
       
       // Try Web Share API (Mobile native sharing to embed file directly)
       const imgUrl = btn.dataset.image;
