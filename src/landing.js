@@ -58,8 +58,24 @@ function renderSuits() {
       }
     }).join('');
 
-    // Landing page shows AI-styled image if available; real photo used for WhatsApp
-    const displayImg = suit.landing_image_path || suit.image_path;
+const LANDING_IMAGES = {
+  'suit-fernando-royal-blue': '/landing/fernando-royal-blue.png',
+  'suit-1-white': '/landing/2037-white.png',
+  'suit-5-black': '/landing/daniel-black.png',
+  'suit-4-navy': '/landing/daniel-navy.png',
+  'suit-fernando-navy-satin': '/landing/fernando-navy-satin.png',
+  'suit-white-tux-db-melon': '/landing/white-tux-db-melon.png',
+  'suit-mario-casa-brown-db': '/landing/mario-casa-brown-db.png',
+  'suit-melano-black-db': '/landing/melano-black-db.png',
+  'suit-mario-casa-blue': '/landing/mario-casa-blue.png',
+  'suit-mario-casa-navy-db': '/landing/mario-casa-navy-db.png',
+  'suit-mario-casa-grey-db': '/landing/mario-casa-grey-db.png',
+  'suit-navy-blue-pinstripe': '/landing/navy-blue-pinstripe.png',
+  'suit-mario-casa-black-velvet': '/landing/mario-casa-black-velvet.png'
+};
+
+    // Landing page shows IC Ian Collection background wall image; real photo used for WhatsApp
+    const displayImg = suit.landing_image_path || LANDING_IMAGES[suit.id] || suit.image_path;
     const realImgUrl = new URL(suit.image_path, window.location.origin).href;
     const waMsg = `Hello Ian Boutique! I'd like to book this ${itemName}: ${suit.title}.\n\nPicture: ${realImgUrl}\n\nPlease advise on availability.`;
 
