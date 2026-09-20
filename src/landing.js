@@ -63,6 +63,7 @@ const LANDING_IMAGES = {
   'suit-1-white': '/landing/2037-white.png',
   'suit-5-black': '/landing/daniel-black.png',
   'suit-4-navy': '/landing/daniel-navy.png',
+  'suit-6-wine': '/landing/daniel-black.png',
   'suit-fernando-navy-satin': '/landing/fernando-navy-satin.png',
   'suit-white-tux-db-melon': '/landing/white-tux-db-melon.png',
   'suit-mario-casa-brown-db': '/landing/mario-casa-brown-db.png',
