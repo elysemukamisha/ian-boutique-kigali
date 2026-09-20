@@ -72,7 +72,8 @@ const LANDING_IMAGES = {
   'suit-mario-casa-navy-db': '/landing/mario-casa-navy-db.png',
   'suit-mario-casa-grey-db': '/landing/mario-casa-grey-db.png',
   'suit-navy-blue-pinstripe': '/landing/navy-blue-pinstripe.png',
-  'suit-mario-casa-black-velvet': '/landing/mario-casa-black-velvet.png'
+  'suit-mario-casa-black-velvet': '/landing/mario-casa-black-velvet.png',
+  'suit-ian-collection-black-shawl': '/landing/ian-collection-black-shawl.png'
 };
 
     // Landing page shows IC Ian Collection background wall image; real photo used for WhatsApp
