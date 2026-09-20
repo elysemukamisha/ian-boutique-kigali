@@ -7,7 +7,7 @@
 */
 import {
   getSuits, getRentals, createRental, markReturned, upsertSuit, updateSuitStock,
-  subscribeAll, addBusinessDays, fmtDate, getRentalStatus,
+  subscribeAll, addBusinessDays, fmtDate, getRentalStatus, playPingSound,
   SIZES, PANTS_SIZES, LOCATIONS, STAFF_PASSWORD
 } from './db.js';
 
@@ -144,6 +144,41 @@ function renderKPIs() {
   document.getElementById('audioToggleBtn').style.color = audioEnabled ? 'var(--gold)' : '';
 }
 
+/* ── SIZE PILL INTERACTION & POPUP STATUS ── */
+window.handleSizePillClick = function(suitId, sz) {
+  const suit = suits.find(s => s.id === suitId);
+  if (!suit) return;
+
+  const qty = suit.stock?.[sz] || 0;
+  const activeRental = rentals.find(r => r.suit_id === suitId && r.size === sz && r.status !== 'Returned');
+
+  if (qty > 0) {
+    // Available size clicked -> open rent sheet directly with size pre-selected!
+    window.openRentForSuit(suitId, sz);
+    return;
+  }
+
+  // Unavailable size clicked -> play audio ping notification & show status popup toast
+  playPingSound();
+
+  if (activeRental) {
+    const retDateFmt = fmtDate(activeRental.return_date);
+    const msg = `📅 <b>SIZE ${sz} IS CURRENTLY ON RENT</b><br/><br/>` +
+      `👔 <b>Item:</b> ${suit.title} (${suit.code})<br/>` +
+      `👤 <b>Rented to:</b> ${activeRental.customer_name} (${activeRental.location})<br/><br/>` +
+      `⏰ <b>Expected Return Date:</b> ${retDateFmt}<br/>` +
+      `✨ <span style="color:var(--gold);font-weight:600;">Will be cleaned & ready within next 5 business days (${fmtDate(addBusinessDays(new Date(), 5))}).</span>`;
+    showToast(msg);
+  } else {
+    const next5Days = fmtDate(addBusinessDays(new Date(), 5));
+    const msg = `⚠️ <b>SIZE ${sz} IS CURRENTLY OUT OF STOCK</b><br/><br/>` +
+      `👔 <b>Item:</b> ${suit.title} (${suit.code})<br/>` +
+      `📦 <b>Stock:</b> 0 units currently available.<br/><br/>` +
+      `🗓️ <b>Next Estimated Availability:</b> ${next5Days} (next 5 business days).`;
+    showToast(msg);
+  }
+};
+
 /* ── RENDER SUITS LIST ── */
 function renderSuitsList() {
   const container = document.getElementById('suitsGridContainer');
@@ -159,17 +194,29 @@ function renderSuitsList() {
 
   container.innerHTML = fs.map(suit => {
     const sizesToUse = suit.category === 'Pants' ? PANTS_SIZES : SIZES;
+    const totalAvail = sizesToUse.reduce((a,sz) => a + (suit.stock?.[sz]||0), 0);
+    const isRentedAny = rentals.some(r => r.suit_id === suit.id && r.status !== 'Returned');
+
     const sizePills = sizesToUse.map(sz => {
       const qty = suit.stock?.[sz] || 0;
-      const isRented = rentals.some(r=>r.suit_id===suit.id&&r.size===sz&&r.status!=='Returned');
+      const isRented = rentals.some(r => r.suit_id === suit.id && r.size === sz && r.status !== 'Returned');
       let cls = qty > 0 ? 'avail' : (isRented ? 'rented' : 'empty');
-      return `<span class="sc-size-pill ${cls}" title="${qty} available">${sz}</span>`;
+      const pillTitle = qty > 0 
+        ? `Size ${sz}: ${qty} available (Click to rent)` 
+        : (isRented ? `Size ${sz}: On rent (Click for return date)` : `Size ${sz}: Out of stock (Click for info)`);
+
+      return `<span class="sc-size-pill ${cls}" title="${pillTitle}" onclick="event.stopPropagation(); window.handleSizePillClick('${suit.id}', '${sz}')">${sz}</span>`;
     }).join('');
-    
+
+    const availBadge = totalAvail > 0 
+      ? `<div class="sc-avail-badge avail">• ${totalAvail} available</div>`
+      : (isRentedAny ? `<div class="sc-avail-badge rented">On Rent</div>` : `<div class="sc-avail-badge empty">Out of Stock</div>`);
+
     return `<div class="suit-card" onclick="window.openRentForSuit('${suit.id}')">
       <img class="sc-bg-img" src="${suit.image_path}" alt="${suit.title}" loading="lazy" onerror="this.src='/suits/2037-white.png'"/>
       <div class="sc-overlay"></div>
       <div class="sc-badge">${suit.code}</div>
+      ${availBadge}
       <div class="sc-body">
         <div class="sc-title">${suit.title}</div>
         <div class="sc-meta">${suit.color}</div>
@@ -277,13 +324,17 @@ function closeSheet(id) {
 });
 
 /* ── RENT ── */
-window.openRentForSuit = function(suitId) {
+window.openRentForSuit = function(suitId, defaultSize) {
   const sel = document.getElementById('rentSuitModelSelect');
   if (sel) sel.innerHTML = suits.map(s=>`<option value="${s.id}"${s.id===suitId?' selected':''}>${s.code} — ${s.title}</option>`).join('');
   document.getElementById('rentLocationSelect').value = activeLocation;
   
   // Trigger update of sizes based on selected item
   updateRentSizes();
+  if (defaultSize) {
+    const sizeSel = document.getElementById('rentSuitSizeSelect');
+    if (sizeSel) sizeSel.value = defaultSize;
+  }
   
   updateReturnPreview();
   openSheet('rentModalOverlay');
