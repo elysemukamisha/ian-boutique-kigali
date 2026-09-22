@@ -331,10 +331,27 @@ body {
 .ssc-swatch { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); }
 .ssc-sizes { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
 .ssc-size {
-  font-size: 12px; font-weight: 700; padding: 4px 10px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  padding: 4px 8px;
   border-radius: 8px; background: var(--bg3); border: 1px solid var(--sep); color: var(--text2);
+  line-height: 1.1;
+}
+.ssc-size .ssc-sz-num {
+  font-size: 12px;
+  font-weight: 700;
+}
+.ssc-size .ssc-sz-qty {
+  font-size: 9px;
+  font-weight: 600;
+  opacity: 0.85;
+  margin-top: 1px;
 }
 .ssc-size.avail { border-color: rgba(52,199,89,0.35); color: var(--green); }
+.ssc-size.avail .ssc-sz-qty { color: #34c759; }
 .ssc-size.empty { opacity: 0.3; }
 
 button.sel-size { cursor: pointer; transition: all 0.2s; }

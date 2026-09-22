@@ -205,7 +205,7 @@ function renderSuitsList() {
         ? `Size ${sz}: ${qty} available (Click to rent)` 
         : (isRented ? `Size ${sz}: On rent (Click for return date)` : `Size ${sz}: Out of stock (Click for info)`);
 
-      return `<span class="sc-size-pill ${cls}" title="${pillTitle}" onclick="event.stopPropagation(); window.handleSizePillClick('${suit.id}', '${sz}')">${sz}</span>`;
+      return `<span class="sc-size-pill ${cls}" title="${pillTitle}" onclick="event.stopPropagation(); window.handleSizePillClick('${suit.id}', '${sz}')"><span class="sc-sz-num">${sz}</span><span class="sc-sz-qty">${qty}</span></span>`;
     }).join('');
 
     const availBadge = totalAvail > 0 

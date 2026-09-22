@@ -52,9 +52,9 @@ function renderSuits() {
     const sizePills = itemSizes.map(sz => {
       const qty = suit.stock?.[sz] || 0;
       if (qty > 0) {
-        return `<button class="ssc-size avail sel-size" data-id="${suit.id}" data-size="${sz}">${sz}</button>`;
+        return `<button class="ssc-size avail sel-size" data-id="${suit.id}" data-size="${sz}"><span class="ssc-sz-num">${sz}</span><span class="ssc-sz-qty">${qty}</span></button>`;
       } else {
-        return `<span class="ssc-size empty">${sz}</span>`;
+        return `<span class="ssc-size empty"><span class="ssc-sz-num">${sz}</span><span class="ssc-sz-qty">0</span></span>`;
       }
     }).join('');
 
